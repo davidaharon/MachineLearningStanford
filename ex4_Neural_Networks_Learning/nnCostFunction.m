@@ -38,7 +38,37 @@ Theta2_grad = zeros(size(Theta2));
 %         variable J. After implementing Part 1, you can verify that your
 %         cost function computation is correct by verifying the cost
 %         computed in ex4.m
+
 %
+% 1. Implement forword propagation to get h_theta(x)
+%
+
+% LAYER 1
+X = [ones(m,1) X];         % Bias - adding a row of m ones
+
+% LAYER 2 - hidden layer
+z2 = X*Theta1';                          % Compute z2 - input of g(sifmoid function) 
+a2 = [ones(size(z2, 1), 1) sigmoid(z2)]; % g(z2) add a row of ones 
+
+% LAYER 3 - output layer
+z3 = a2*Theta2';
+a3 = sigmoid(z3);
+% The output layer is hypothesis function
+h = a3;
+
+% 
+% 2. J function computation
+%
+
+% Reguralarization - computing penalty
+penalty = sum(sum(Theta1(:, 2:end).^2, 2))+sum(sum(Theta2(:, 2:end).^2, 2));
+I = eye(num_labels);
+Y = zeros(m, num_labels);
+for i=1:m
+  Y(i, :)= I(y(i), :);
+end
+J = sum(sum((-Y).*log(h) - (1-Y).*log(1-h), 2))/m + lambda*penalty/(2*m);
+
 % Part 2: Implement the backpropagation algorithm to compute the gradients
 %         Theta1_grad and Theta2_grad. You should return the partial derivatives of
 %         the cost function with respect to Theta1 and Theta2 in Theta1_grad and
@@ -54,6 +84,34 @@ Theta2_grad = zeros(size(Theta2));
 %               over the training examples if you are implementing it for the 
 %               first time.
 %
+Y = zeros(num_labels, m);
+for i=1:num_labels,
+    Y(i,:) = (y==i);
+endfor
+
+for t = 1:m,
+    %Set the input layer’s values (a(1)) to the t-th training example x(t)
+    a1 = X(t,:);
+    %Perform a feedforward pass, computing the activations (z(2), a(2), z(3), a(3)) 
+    %for layers 2 and 3.
+    z2 = Theta1 * a1';
+    a2 = sigmoid(z2);
+    a2 = [1 ; a2]; % add a+1 term to ensure that the vectors of activations 
+                   % for layers a(1) and a(2) also include the bias unit.
+    %LAYER 3    
+    a3 = sigmoid(Theta2 * a2);
+    %For each output unit k in layer 3 set δ(3) = (a(3) − yk)
+    d3 = a3 - Y(:,t);
+    % Bias
+    z2 = [1 ; z2];
+    %For the hidden layer l = 2, set δ(2) = 􏰀Θ(2)􏰁T δ(3). ∗ g′(z(2))
+    d2 = (Theta2' * d3) .* sigmoidGradient(z2);
+    d2 = d2(2:end);
+    %Accumulate the gradient
+    Theta2_grad = (Theta2_grad + d3 * a2');
+    Theta1_grad = (Theta1_grad + d2 * a1);
+endfor;
+
 % Part 3: Implement regularization with the cost function and gradients.
 %
 %         Hint: You can implement this around the code for
@@ -62,23 +120,13 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+Theta1_grad(:,1) = Theta1_grad(:,1)./m;
 
+Theta2_grad(:,1) = Theta2_grad(:,1)./m;
 
+Theta1_grad(:,2:end) = Theta1_grad(:,2:end)./m + ( (lambda/m) * Theta1(:,2:end) );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Theta2_grad(:,2:end) = Theta2_grad(:,2:end)./m + ( (lambda/m) * Theta2(:,2:end) );
 
 % -------------------------------------------------------------
 
