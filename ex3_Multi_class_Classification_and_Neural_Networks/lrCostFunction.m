@@ -36,17 +36,15 @@ grad = zeros(size(theta));
 %           grad = grad + YOUR_CODE_HERE (using the temp variable)
 %
 
+%1. hypothesis function computation for cost function
+hypothesis = sigmoid(X*theta);
+%2. cost function computation 
+J = (1 / m) * sum((-y .* log(hypothesis)) - ((1 - y) .* log(1 - (hypothesis))));
+J = J + lambda/(2*m) * sum(theta(2:end) .^ 2);
 
+grad = (1 / m) .* X' * (hypothesis - y);
 
-
-
-
-
-
-
+grad(2:end) = grad(2:end) + (lambda/m)*theta(2:end);
 
 % =============================================================
-
-grad = grad(:);
-
 end

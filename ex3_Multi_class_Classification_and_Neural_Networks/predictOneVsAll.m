@@ -29,14 +29,7 @@ X = [ones(m, 1) X];
 %       are in rows, then, you can use max(A, [], 2) to obtain the max 
 %       for each row.
 %       
-
-
-
-
-
-
-
+predictions_vec = sigmoid(X*all_theta');
+[a, p]=max(predictions_vec, [], 2);
 % =========================================================================
-
-
 end

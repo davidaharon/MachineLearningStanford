@@ -21,14 +21,15 @@ p = zeros(size(X, 1), 1);
 %       can use max(A, [], 2) to obtain the max for each row.
 %
 
-
-
-
-
-
-
-
-
+% 1
+% .   X  *  Theta1'
+% .
+%layer2
+z2 = [ones(m, 1) X] * Theta1';
+%layer3
+z3 = [ones(size(z2, 1), 1) sigmoid(z2)] * Theta2';
+%output
+[a, p] = max(sigmoid(z3), [], 2);
 % =========================================================================
 
 
