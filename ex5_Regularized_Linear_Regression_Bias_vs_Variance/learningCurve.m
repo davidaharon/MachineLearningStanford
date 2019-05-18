@@ -50,13 +50,21 @@ error_val   = zeros(m, 1);
 %           
 %       end
 %
-
 % ---------------------- Sample Solution ----------------------
-
-
-
-
-
+for i = 1:m
+    %To plot the learning curve, we need a(for different training set sizes.):
+    % 1. Training set error  
+    % 2. Cross validation set error 
+    % Using different subsets of the original training set X - first i examples.
+    X_i = X(1:i, :);
+    y_i = y(1:i); 
+    % Use the trainLinearReg function to find the θ parameters
+    theta = trainLinearReg(X_i, y_i, lambda);
+    % Compute erors of training set
+    error_train(i) = linearRegCostFunction(X_i, y_i, theta, 0);
+    % Compute errors of cross validation set
+    error_val(i) = linearRegCostFunction(Xval, yval, theta, 0);
+end
 
 
 % -------------------------------------------------------------
