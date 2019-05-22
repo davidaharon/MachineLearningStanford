@@ -25,14 +25,11 @@ centroids = zeros(K, n);
 %
 % Note: You can use a for-loop over the centroids to compute this.
 %
-
-
-
-
-
-
-
-
+for k = 1:K
+    members = idx == k;
+    members_sum = sum(members);
+    centroids(k, :) = sum(X .* members) ./ members_sum;
+end
 % =============================================================
 
 
