@@ -20,13 +20,16 @@ idx = zeros(size(X,1), 1);
 %
 % Note: You can use a for-loop over the examples to compute this.
 %
+% c(i) is the index of the centroid that is closest to x(i)
+% μj is the position (value) of the j’th centroid
 
-
-
-
-
-
-
+for i = 1:size(X,1)
+    distance = zeros(1,K);
+    for j = 1:K
+        distance(1,j) = sqrt(sum(power((X(i,:)-centroids(j,:)),2)));
+    end
+    [d, idx(i,1)] = min(distance);
+end
 % =============================================================
 
 end
